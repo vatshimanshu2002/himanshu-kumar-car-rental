@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Car {
+  id          Int       @id @default(autoincrement())
+  name        String
+  brand       String
+  model       String
+  year        Int
+  price       Float
+  image       String
+  category    String
+  features    String[]
+  available   Boolean   @default(true)
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Booking {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  carId      Int
+  startDate  DateTime
+  endDate    DateTime
+  status     String   @default("pending")
+  totalPrice Float
+  user       User     @relation(fields: [userId], references: [id])
+  car        Car      @relation(fields: [carId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
